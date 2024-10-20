@@ -14,6 +14,17 @@ const NotesForm = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const handleCopy = ()=>{
+        navigator.clipboard.writeText(username);
+        if(fullName.length!==0){
+            alert("username copied")
+        }
+        else{
+            return
+        }
+        
+      }
+
     // Function to handle full name input and generate username
     const handleFullNameChange = (e) => {
         const name = e.target.value;
@@ -50,7 +61,8 @@ const NotesForm = () => {
             setUsername(''); // Clear generated username
             setPassword('');
             setConfirmPassword(''); // Clear confirm password   
-            alert('Note saved successfully!');
+            alert('Note saved successfully!',handleCopy());
+
         }
         setLoading(false);
     };
@@ -69,7 +81,7 @@ const NotesForm = () => {
                         required
                     />
                 </div>
-                <div className="mb-3">
+                <div className="mb-3" style={{display:"flex", gap:"10px"}}>
                     <input
                         type="text"
                         className="form-control"
@@ -77,7 +89,9 @@ const NotesForm = () => {
                         value={username}
                         readOnly // Make this read-only since it's auto-generated
                     />
+                <button className=' btn btn-primary  ' onClick={handleCopy}>copy</button>
                 </div>
+
                 {/* passwordss */}
                 <div className="mb-3" style={{ position: 'relative' }}>
                     <input

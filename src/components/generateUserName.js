@@ -1,9 +1,10 @@
 const generateUsername = (fullName) => {
+
     // Split the full name into parts
     const nameParts = fullName.trim().split(' ');
 
     // If no name parts are found, return an empty string
-    if (nameParts.length === 0) return '';
+    if (nameParts.length === 0) return "";
 
     // Create a base username using the first letter of the first name and the last name
     const firstName = nameParts[0];
@@ -13,7 +14,7 @@ const generateUsername = (fullName) => {
     let username = `${firstName.charAt(0).toLowerCase()}${lastName.toLowerCase()}`;
 
     // Generate a random number to ensure uniqueness
-    const randomNumber = Math.floor(Math.random() * 1000);
+    const randomNumber = Math.floor(Math.random() * 100);
     username += randomNumber;
 
     return username;
