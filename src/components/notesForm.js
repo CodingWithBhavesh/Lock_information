@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import supabase from './supabaseClient';
 import generateUsername from './generateUserName'; // Import your username generation function
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 
 const NotesForm = () => {
     const [fullName, setFullName] = useState(''); // State for full name
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState(''); // State for confirm password
+    const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
     const [note, setNote] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -28,6 +31,12 @@ const NotesForm = () => {
         setLoading(true);
         setError('');
 
+        if (password !== confirmPassword) {
+            setError('Passwords do not match!');
+            setLoading(false);
+            return;
+        }
+
         // Save note to Supabase
         const { data, error } = await supabase
             .from('notes')
@@ -40,6 +49,7 @@ const NotesForm = () => {
             setFullName(''); // Clear full name
             setUsername(''); // Clear generated username
             setPassword('');
+            setConfirmPassword(''); // Clear confirm password   
             alert('Note saved successfully!');
         }
         setLoading(false);
@@ -68,17 +78,52 @@ const NotesForm = () => {
                         readOnly // Make this read-only since it's auto-generated
                     />
                 </div>
-                <div className="mb-3">
+                {/* passwordss */}
+                <div className="mb-3" style={{ position: 'relative' }}>
                     <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'} // Toggle confirm password visibility                        className="form-control"
                         className="form-control"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                    <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                            position: 'absolute',
+                            right: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        {showPassword ? <FaEye /> : <FaEyeSlash />}
+                    </span>
                 </div>
-                <div className="mb-3">
+                <div className="mb-3" style={{ position: 'relative' }}>
+                    <input
+                         type={showPassword ? 'text' : 'password'} // Toggle confirm password visibility
+                         className="form-control"
+                         placeholder="Confirm Password"
+                         value={confirmPassword}
+                         onChange={(e) => setConfirmPassword(e.target.value)}
+                         required
+                    />
+                    <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                            position: 'absolute',
+                            right: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        {showPassword ? <FaEye /> : <FaEyeSlash />}
+                        </span>
+                </div>
+                <div className="mb-3" >
                     <textarea
                         className="form-control"
                         placeholder="Your note here..."
