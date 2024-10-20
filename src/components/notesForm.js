@@ -31,7 +31,7 @@ const NotesForm = () => {
         // Save note to Supabase
         const { data, error } = await supabase
             .from('notes')
-            .insert([{ username, password, note }]);
+            .insert([{ full_name: fullName, username, password, note }]); // Include full_name
 
         if (error) {
             setError('Error saving note: ' + error.message);
@@ -47,7 +47,7 @@ const NotesForm = () => {
 
     return (
         <div className="container mt-4">
-            <h2 className="text-center" style={{ fontVariantCaps: "unicase",color:"cadetblue" }}>Lock Your Note</h2>
+            <h2 className="text-center" style={{ fontVariantCaps: "unicase"  }}>Lock Your Note</h2>
             <form onSubmit={saveNote} className="p-3 border rounded shadow">
                 <div className="mb-3">
                     <input
