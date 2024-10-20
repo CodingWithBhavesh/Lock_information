@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import supabase from './components/supabaseClient'; // Import the Supabase client
 import NotesForm from './components/notesForm';
 import AccessNotes from './components/AccessNotes'; // Import the AccessNotes component
-import './App.css'; // Import CSS
+// import './App.css'; // Import CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const App = () => {
     const [notes, setNotes] = useState([]);
@@ -30,20 +32,16 @@ const App = () => {
     };
 
     return (
-        <div className="app-container">
-            <h1>Notes Locker</h1>
+        <div className="container mt-4 ">
+            <h1 style={{fontSize:"5rem",color:"grey",fontFamily:"cursive"}}>Notes Locker</h1>
             <NotesForm onNoteSaved={handleNoteSaved} />
-            <h2>Saved Notes</h2>
-            <div className="notes-list">
-                {notes.map((note) => (
-                    <div key={note.id} className="note-item">
-                        <strong>{note.name}</strong>: {note.note}
-                    </div>
-                ))}
-            </div>
+            
 
             {/* Add AccessNotes component and pass notes as prop */}
+            <div>
+
             <AccessNotes notes={notes} />
+            </div>
         </div>
     );
 };
