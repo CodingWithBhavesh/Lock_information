@@ -8,6 +8,7 @@ const AccessNotes = () => {
     const [note, setNote] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [editing, setEditing] = useState(false); // State to track edit mode
 
     const fetchNote = async (e) => {
         e.preventDefault();
@@ -17,7 +18,7 @@ const AccessNotes = () => {
         const { data, error } = await supabase
             .from('notes')
             .select('*')
-            .eq('username', username)
+            .eq('username', username)   
             .eq('password', password)
             .single(); // Fetch single note
 
@@ -26,6 +27,25 @@ const AccessNotes = () => {
             setNote('');
         } else {
             setNote(data.note);
+            setEditing(true);
+        }
+        setLoading(false);
+    };
+
+    const saveEditedNote = async () => {
+        setLoading(true);
+        setError('');
+
+        const { data, error } = await supabase
+            .from('notes')
+            .update({ note }) // Update the note
+            .eq('username', username)
+            .eq('password', password);
+
+        if (error) {
+            setError('Error saving note: ' + error.message);
+        } else {
+            alert('Note updated successfully!');
         }
         setLoading(false);
     };
@@ -59,15 +79,17 @@ const AccessNotes = () => {
                 </button>
             </form>
             {error && <p className="text-danger mt-3">{error}</p>}
-            {note && (
-                <div className="mt-4">
+            {note && editing && (
+                <div className='mb-4'>
                     <h3>Your Note:</h3>
-                    <textarea
-                        value={note}
-                        readOnly
-                        className="form-control"
-                        style={{ height: '200px' }}
+                    <textarea 
+                        value={note} 
+                        onChange={(e) => setNote(e.target.value)} // Add this to make the field editable
+                        style={{ width: '100%', height: '200px',margin:"29px" }} 
                     />
+                    <button onClick={saveEditedNote} style={{marginBottom:"20px"}} className='btn btn-primary' disabled={loading}>
+                        {loading ? 'Saving...' : 'Save Note'}
+                    </button>   
                 </div>
             )}
         </div>

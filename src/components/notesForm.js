@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import supabase from './supabaseClient';
 import generateUsername from './generateUserName'; // Import your username generation function
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -61,7 +61,8 @@ const NotesForm = () => {
             setUsername(''); // Clear generated username
             setPassword('');
             setConfirmPassword(''); // Clear confirm password   
-            alert('Note saved successfully!',handleCopy());
+            alert('Note saved successfully!');
+            handleCopy();
 
         }
         setLoading(false);
