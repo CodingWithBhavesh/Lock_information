@@ -62,7 +62,7 @@ const NotesForm = () => {
             setPassword('');
             setConfirmPassword(''); // Clear confirm password   
             alert('Note saved successfully!');
-            handleCopy();
+            // handleCopy();
 
         }
         setLoading(false);

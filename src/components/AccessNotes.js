@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import supabase from './supabaseClient'; // Ensure you have the Supabase client imported
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
+// StateContext.js
+
 
 const AccessNotes = () => {
     const [username, setUsername] = useState('');
@@ -9,6 +12,7 @@ const AccessNotes = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState(false); // State to track edit mode
+    
 
     const fetchNote = async (e) => {
         e.preventDefault();
@@ -51,7 +55,7 @@ const AccessNotes = () => {
     };
 
     return (
-        <div className="container mt-4">
+        <div className=" mt-4" style={{display:"flex", flexDirection:"column" ,gap:"30px"}}>
             <h2 className="text-center" style={{ fontVariantCaps: "unicase",color:"cadetblue" }}>Access Your Note</h2>
             <form onSubmit={fetchNote} className="p-3 border rounded shadow">
                 <div className="mb-3">
@@ -60,7 +64,7 @@ const AccessNotes = () => {
                         className="form-control"
                         placeholder="Username"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value.toLowerCase())}
                         required
                     />
                 </div>
@@ -80,13 +84,25 @@ const AccessNotes = () => {
             </form>
             {error && <p className="text-danger mt-3">{error}</p>}
             {note && editing && (
-                <div className='mb-4'>
-                    <h3>Your Note:</h3>
+                <div >
+                    <h3 >Your Note:</h3>
                     <textarea 
                         value={note} 
                         onChange={(e) => setNote(e.target.value)} // Add this to make the field editable
-                        style={{ width: '100%', height: '200px',margin:"29px" }} 
+                        style={{ width: '100%', height: '200px',margin:" 0px 0px 20px" }} 
                     />
+                    {/* <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                            position: 'absolute',
+                            right: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        {showPassword ? <FaEye /> : <FaEyeSlash />}
+                        </span> */}
                     <button onClick={saveEditedNote} style={{marginBottom:"20px"}} className='btn btn-primary' disabled={loading}>
                         {loading ? 'Saving...' : 'Save Note'}
                     </button>   

@@ -38,7 +38,7 @@ const App = () => {
             
 
             {/* Add AccessNotes component and pass notes as prop */}
-            <div>
+            <div className='mb-5'>
 
             <AccessNotes notes={notes} />
             </div>
