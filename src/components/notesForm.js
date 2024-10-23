@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import supabase from './supabaseClient';
 import generateUsername from './generateUserName'; // Import your username generation function
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,17 +13,18 @@ const NotesForm = () => {
     const [note, setNote] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [copyMessage, setCopyMessage] = useState(''); // State for copy message
+    const [saveMessage, setSaveMessage] = useState(''); // State for save success message
 
-    const handleCopy = ()=>{
-        navigator.clipboard.writeText(username);
-        if(fullName.length!==0){
-            alert("username copied")
+    // Function to handle copying the username to clipboard
+    const handleCopy = () => {
+        if (fullName.length !== 0) {
+            navigator.clipboard.writeText(username);
+            setCopyMessage('Username copied!'); // Set message when username is copied
+        } else {
+            setCopyMessage(''); // Clear message if no full name
         }
-        else{
-            return
-        }
-        
-      }
+    };
 
     // Function to handle full name input and generate username
     const handleFullNameChange = (e) => {
@@ -41,6 +42,7 @@ const NotesForm = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
+        setSaveMessage(''); // Clear save message
 
         if (password !== confirmPassword) {
             setError('Passwords do not match!');
@@ -60,17 +62,15 @@ const NotesForm = () => {
             setFullName(''); // Clear full name
             setUsername(''); // Clear generated username
             setPassword('');
-            setConfirmPassword(''); // Clear confirm password   
-            alert('Note saved successfully!');
-            // handleCopy();
-
+            setConfirmPassword(''); // Clear confirm password
+            setSaveMessage('Note saved successfully!'); // Show success message
         }
         setLoading(false);
     };
 
     return (
         <div className="container mt-4">
-            <h2 className="text-center" style={{ fontVariantCaps: "unicase"  }}>Lock Your Note</h2>
+            <h2 className="text-center" style={{ fontVariantCaps: "unicase" }}>Lock Your Note</h2>
             <form onSubmit={saveNote} className="p-3 border rounded shadow">
                 <div className="mb-3">
                     <input
@@ -82,7 +82,7 @@ const NotesForm = () => {
                         required
                     />
                 </div>
-                <div className="mb-3" style={{display:"flex", gap:"10px"}}>
+                <div className="mb-3" style={{ display: "flex", gap: "10px" }}>
                     <input
                         type="text"
                         className="form-control"
@@ -90,13 +90,18 @@ const NotesForm = () => {
                         value={username}
                         readOnly // Make this read-only since it's auto-generated
                     />
-                <button className=' btn btn-primary  ' onClick={handleCopy}>copy</button>
+                    <button type="button" className="btn btn-primary" onClick={handleCopy}>
+                        Copy
+                    </button>
                 </div>
 
-                {/* passwordss */}
+                {/* Display copy message */}
+                {copyMessage && <p className="text-success">{copyMessage}</p>}
+
+                {/* Password fields */}
                 <div className="mb-3" style={{ position: 'relative' }}>
                     <input
-                        type={showPassword ? 'text' : 'password'} // Toggle confirm password visibility                        className="form-control"
+                        type={showPassword ? 'text' : 'password'} // Toggle confirm password visibility
                         className="form-control"
                         placeholder="Password"
                         value={password}
@@ -118,12 +123,12 @@ const NotesForm = () => {
                 </div>
                 <div className="mb-3" style={{ position: 'relative' }}>
                     <input
-                         type={showPassword ? 'text' : 'password'} // Toggle confirm password visibility
-                         className="form-control"
-                         placeholder="Confirm Password"
-                         value={confirmPassword}
-                         onChange={(e) => setConfirmPassword(e.target.value)}
-                         required
+                        type={showPassword ? 'text' : 'password'} // Toggle confirm password visibility
+                        className="form-control"
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
                     />
                     <span
                         onClick={() => setShowPassword(!showPassword)}
@@ -136,9 +141,9 @@ const NotesForm = () => {
                         }}
                     >
                         {showPassword ? <FaEye /> : <FaEyeSlash />}
-                        </span>
+                    </span>
                 </div>
-                <div className="mb-3" >
+                <div className="mb-3">
                     <textarea
                         className="form-control"
                         placeholder="Your note here..."
@@ -152,7 +157,10 @@ const NotesForm = () => {
                     {loading ? 'Saving...' : 'Lock Info'}
                 </button>
             </form>
+
+            {/* Display error or save success messages */}
             {error && <p className="text-danger mt-3">{error}</p>}
+            {saveMessage && <p className="text-success mt-3">{saveMessage}</p>}
         </div>
     );
 };

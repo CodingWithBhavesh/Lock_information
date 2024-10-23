@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient'; // Ensure you have the Supabase client imported
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
-// StateContext.js
-
 
 const AccessNotes = () => {
     const [username, setUsername] = useState('');
@@ -12,17 +9,26 @@ const AccessNotes = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState(false); // State to track edit mode
-    
 
-    const fetchNote = async (e) => {
-        e.preventDefault();
+    // Debounce function
+    const debounce = (func, delay) => {
+        let timer;
+        return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
+    // Handler to fetch the note
+    const fetchNote = async () => {
+        if (!username || !password) return; // Prevent fetching if fields are empty
         setLoading(true);
-        setError('');
+        setError(''); // Clear error message
 
         const { data, error } = await supabase
             .from('notes')
             .select('*')
-            .eq('username', username)   
+            .eq('username', username)
             .eq('password', password)
             .single(); // Fetch single note
 
@@ -36,9 +42,17 @@ const AccessNotes = () => {
         setLoading(false);
     };
 
+    // Debounced function to call fetchNote
+    const debouncedFetchNote = debounce(fetchNote, 300); // 300 ms debounce
+
+    // UseEffect to trigger note fetching
+    useEffect(() => {
+        debouncedFetchNote();
+    }, [username, password]); // Fetch when username or password changes
+
     const saveEditedNote = async () => {
         setLoading(true);
-        setError('');
+        setError(''); // Clear error message
 
         const { data, error } = await supabase
             .from('notes')
@@ -49,15 +63,16 @@ const AccessNotes = () => {
         if (error) {
             setError('Error saving note: ' + error.message);
         } else {
+            // Optimistically show a success message
             alert('Note updated successfully!');
         }
         setLoading(false);
     };
 
     return (
-        <div className=" mt-4" style={{display:"flex", flexDirection:"column" ,gap:"30px"}}>
-            <h2 className="text-center" style={{ fontVariantCaps: "unicase",color:"cadetblue" }}>Access Your Note</h2>
-            <form onSubmit={fetchNote} className="p-3 border rounded shadow">
+        <div className="mt-4" style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+            <h2 className="text-center" style={{ fontVariantCaps: "unicase", color: "cadetblue" }}>Access Your Note</h2>
+            <form className="p-3 border rounded shadow">
                 <div className="mb-3">
                     <input
                         type="text"
@@ -78,34 +93,22 @@ const AccessNotes = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
+                <button type="button" onClick={debouncedFetchNote} className="btn btn-primary" disabled={loading}>
                     {loading ? 'Loading...' : 'Access Note'}
                 </button>
             </form>
             {error && <p className="text-danger mt-3">{error}</p>}
             {note && editing && (
-                <div >
-                    <h3 >Your Note:</h3>
-                    <textarea 
-                        value={note} 
-                        onChange={(e) => setNote(e.target.value)} // Add this to make the field editable
-                        style={{ width: '100%', height: '200px',margin:" 0px 0px 20px" }} 
+                <div>
+                    <h3>Your Note:</h3>
+                    <textarea
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)} // Make the field editable
+                        style={{ width: '100%', height: '200px', margin: "0px 0px 20px" }}
                     />
-                    {/* <span
-                        onClick={() => setShowPassword(!showPassword)}
-                        style={{
-                            position: 'absolute',
-                            right: '10px',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        {showPassword ? <FaEye /> : <FaEyeSlash />}
-                        </span> */}
-                    <button onClick={saveEditedNote} style={{marginBottom:"20px"}} className='btn btn-primary' disabled={loading}>
+                    <button onClick={saveEditedNote} style={{ marginBottom: "20px" }} className='btn btn-primary' disabled={loading}>
                         {loading ? 'Saving...' : 'Save Note'}
-                    </button>   
+                    </button>
                 </div>
             )}
         </div>
