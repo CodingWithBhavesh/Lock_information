@@ -31,18 +31,42 @@ const App = () => {
         fetchNotes();
     };
 
+    const [currentView, setCurrentView] = useState('notesForm'); // State to manage current view
+       // Function to switch views
+       const switchView = (view) => {
+        setCurrentView(view);
+    };
+
     return (
         <div className="container mt-4 ">
             <h1 style={{fontSize:"5rem",color:"grey",fontFamily:"cursive"}}>Notes Locker</h1>
-            <NotesForm onNoteSaved={handleNoteSaved} />
+            {/* <NotesForm onNoteSaved={handleNoteSaved} /> */}
+            <div className="mb-3">
+                {/* Conditionally render the Add Note button */}
+                {currentView !== 'notesForm' && (
+                    <button className="btn btn-primary mx-2" onClick={() => switchView('notesForm')}>
+                        Add Note
+                    </button>
+                )}
+                {/* Conditionally render the Access Notes button */}
+                {currentView !== 'accessNotes' && (
+                    <button className="btn btn-secondary mx-2" onClick={() => switchView('accessNotes')}>
+                        Access Notes
+                    </button>
+                )}            </div>
+
+
+            {/* Conditional rendering based on currentView state */}
+            {currentView === 'accessNotes' && <AccessNotes notes={notes} />}
+            {currentView === 'notesForm' && <NotesForm onNoteSaved={handleNoteSaved} />}
             
 
             {/* Add AccessNotes component and pass notes as prop */}
-            <div className='mb-5'>
+            {/* <div className='mb-5'>
 
             <AccessNotes notes={notes} />
-            </div>
-        </div>
+            </div>*/}
+        </div> 
     );
 };
 
