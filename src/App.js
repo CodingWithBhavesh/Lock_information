@@ -53,7 +53,8 @@ const App = () => {
                     <button className="btn btn-secondary mx-2" onClick={() => switchView('accessNotes')}>
                         Access Notes
                     </button>
-                )}            </div>
+                )}            
+            </div>
 
 
             {/* Conditional rendering based on currentView state */}
