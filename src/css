@@ -1,0 +1,55 @@
+/* Add this CSS to handle the sliding transition */
+.page-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.page-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.page-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.page-exit-active {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 0.5s ease-in, opacity 0.5s ease-in;
+}
+
+/* 
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center elements horizontally 
+  justify-content: center; /* Center elements vertically 
+  height: 100vh; /* Full height of the viewport 
+  background-color: #f8f9fa; /* Light background color 
+}
+
+.card {
+  background: white; /* White background for card 
+  border-radius: 8px; /* Rounded corners 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow 
+  margin: 20px; /* Spacing around cards 
+  padding: 20px; /* Inner spacing   
+  width: 100%;
+  max-width: 500px; /* Max width for card 
+}
+
+.card h2 {
+  text-align: center; /* Center heading 
+  margin-bottom: 20px; /* Space below heading 
+}
+
+.card textarea {
+  resize: none; /* Disable resizing 
+  /* background-color: cadetblue;
+} 
+  
+*/

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import supabase from './components/supabaseClient'; // Import the Supabase client
 import NotesForm from './components/notesForm';
 import AccessNotes from './components/AccessNotes'; // Import the AccessNotes component
-// import './App.css'; // Import CSS
+import './App.css'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -44,13 +44,13 @@ const App = () => {
             <div className="mb-3">
                 {/* Conditionally render the Add Note button */}
                 {currentView !== 'notesForm' && (
-                    <button className="btn btn-primary mx-2" onClick={() => switchView('notesForm')}>
+                    <button className="btn btn-primary mx-2"  onClick={() => switchView('notesForm')}>
                         Add Note
                     </button>
                 )}
                 {/* Conditionally render the Access Notes button */}
                 {currentView !== 'accessNotes' && (
-                    <button className="btn btn-secondary mx-2" onClick={() => switchView('accessNotes')}>
+                    <button className="btn btn-primary mx-2" onClick={() => switchView('accessNotes')}>
                         Access Notes
                     </button>
                 )}            
@@ -58,8 +58,8 @@ const App = () => {
 
 
             {/* Conditional rendering based on currentView state */}
-            {currentView === 'accessNotes' && <AccessNotes notes={notes} />}
-            {currentView === 'notesForm' && <NotesForm onNoteSaved={handleNoteSaved} />}
+            {currentView === 'accessNotes' && <AccessNotes notes={notes}  />}
+            {currentView === 'notesForm' && <NotesForm onNoteSaved={handleNoteSaved}   />}
             
 
             {/* Add AccessNotes component and pass notes as prop */}
@@ -70,5 +70,6 @@ const App = () => {
         </div> 
     );
 };
+
 
 export default App;

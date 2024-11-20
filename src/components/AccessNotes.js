@@ -68,6 +68,12 @@ const AccessNotes = () => {
         }
         setLoading(false);
     };
+    const [usernames, setUsernames] = useState([]);
+    // Load usernames from localStorage on component mount
+    useEffect(() => {
+        const savedUsernames = JSON.parse(localStorage.getItem('usernames')) || [];
+        setUsernames(savedUsernames);
+    }, []);
 
     return (
         <div className="mt-4" style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
@@ -78,10 +84,17 @@ const AccessNotes = () => {
                         type="text"
                         className="form-control"
                         placeholder="Username"
+                        list="usernameSuggestions" // Links to the datalist
                         value={username}
                         onChange={(e) => setUsername(e.target.value.toLowerCase())}
                         required
                     />
+                     {/* Datalist for autocomplete */}
+                     <datalist id="usernameSuggestions">
+                        {usernames.map((user, index) => (
+                            <option key={index} value={user} />
+                        ))}
+                    </datalist>
                 </div>
                 <div className="mb-3">
                     <input
@@ -94,7 +107,15 @@ const AccessNotes = () => {
                     />
                 </div>
                 <button type="button" onClick={debouncedFetchNote} className="btn btn-primary" disabled={loading}>
-                    {loading ? 'Loading...' : 'Access Note'}
+                    {/* {loading ? 'Loading...' : 'Access Note'} */}
+                    {loading ? (
+                        <div className="spinner-border text-light" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                            <span className="ms-2">Loading...</span> {/* Text next to the spinner */}
+                        </div>
+                    ) : (
+                        "Access Note"
+                    )}
                 </button>
             </form>
             {error && <p className="text-danger mt-3">{error}</p>}
@@ -107,7 +128,15 @@ const AccessNotes = () => {
                         style={{ width: '100%', height: '200px', margin: "0px 0px 20px" }}
                     />
                     <button onClick={saveEditedNote} style={{ marginBottom: "20px" }} className='btn btn-primary' disabled={loading}>
-                        {loading ? 'Saving...' : 'Save Note'}
+                        {/* {loading ? 'Saving...' : 'Save Note'} */}
+                        {loading ? (
+                        <div className="spinner-border text-light" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                            <span className="ms-2">Saving....</span> {/* Text next to the spinner */}
+                        </div>
+                    ) : (
+                        "Save Note"
+                    )}
                     </button>
                 </div>
             )}

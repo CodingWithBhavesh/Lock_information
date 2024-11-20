@@ -44,6 +44,12 @@ const NotesForm = () => {
         setError('');
         setSaveMessage(''); // Clear save message
 
+        if (password.length < 4) {
+            setError('Password must be at least 4 characters long.');
+            setLoading(false);
+            return; // Stop the form submission if the password is too short
+        }
+
         if (password !== confirmPassword) {
             setError('Passwords do not match!');
             setLoading(false);
@@ -63,15 +69,22 @@ const NotesForm = () => {
             setUsername(''); // Clear generated username
             setPassword('');
             setConfirmPassword(''); // Clear confirm password
-            setSaveMessage('Note saved successfully!'); // Show success message
+             // Save username to localStorage
+            const savedUsernames = JSON.parse(localStorage.getItem('usernames')) || [];
+            if (!savedUsernames.includes(username)) {
+                savedUsernames.push(username);
+                localStorage.setItem('usernames', JSON.stringify(savedUsernames));
+            }
+            setSaveMessage(`Note saved successfully! Username: ${username}`) // Show success message
         }
         setLoading(false);
     };
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-4 mt-5 ">
             <h2 className="text-center" style={{ fontVariantCaps: "unicase" }}>Lock Your Note</h2>
-            <form onSubmit={saveNote} className="p-3 border rounded shadow">
+            
+            <form onSubmit={saveNote} className="p-3 border rounded shadow my-4">
                 <div className="mb-3">
                     <input
                         type="text"
@@ -154,7 +167,16 @@ const NotesForm = () => {
                     />
                 </div>
                 <button type="submit" className="btn btn-primary" disabled={loading}>
-                    {loading ? 'Saving...' : 'Lock Info'}
+                    {/* {loading ? 'Saving...' : 'Lock Info'} */}
+                    {/* Conditionally render the spinner or the text */}
+                    {loading ? (
+                        <div className="spinner-border text-light" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                            <span className="ms-2">Loading...</span> {/* Text next to the spinner */}
+                        </div>
+                    ) : (
+                        "Lock info"
+                    )}
                 </button>
             </form>
 
