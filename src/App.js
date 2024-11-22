@@ -6,6 +6,7 @@ import NotesForm from './components/notesForm';
 import AccessNotes from './components/AccessNotes'; // Import the AccessNotes component
 import './App.css'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import LiveChat from './components/LiveChat';
 
 
 const App = () => {
@@ -60,6 +61,8 @@ const App = () => {
             {/* Conditional rendering based on currentView state */}
             {currentView === 'accessNotes' && <AccessNotes notes={notes}  />}
             {currentView === 'notesForm' && <NotesForm onNoteSaved={handleNoteSaved}   />}
+
+            <LiveChat/>
             
 
             {/* Add AccessNotes component and pass notes as prop */}
