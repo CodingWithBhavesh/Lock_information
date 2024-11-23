@@ -4,9 +4,12 @@ import React, { useState, useEffect } from 'react';
 import supabase from './components/supabaseClient'; // Import the Supabase client
 import NotesForm from './components/notesForm';
 import AccessNotes from './components/AccessNotes'; // Import the AccessNotes component
+import Note from './components/Notes'; // Import the AccessNotes component
+
 import './App.css'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LiveChat from './components/LiveChat';
+import Access from './components/Access';
 
 
 const App = () => {
@@ -59,8 +62,8 @@ const App = () => {
 
 
             {/* Conditional rendering based on currentView state */}
-            {currentView === 'accessNotes' && <AccessNotes notes={notes}  />}
-            {currentView === 'notesForm' && <NotesForm onNoteSaved={handleNoteSaved}   />}
+            {currentView === 'accessNotes' && <Access notes={notes}  />}
+            {currentView === 'notesForm' && <Note onNoteSaved={handleNoteSaved}   />}
 
             <LiveChat/>
             
