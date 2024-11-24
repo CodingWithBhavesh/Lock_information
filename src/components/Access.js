@@ -13,7 +13,7 @@ const Access = () => {
     // Debounce function
     const debounce = (func, delay) => {
         let timer;
-        return function (...args) {
+        return function (...args    ) {
             clearTimeout(timer);
             timer = setTimeout(() => func.apply(this, args), delay);
         };
@@ -43,7 +43,7 @@ const Access = () => {
     };
 
     // Debounced function to call fetchNote
-    const debouncedFetchNote = debounce(fetchNote, 300); // 300 ms debounce
+    const debouncedFetchNote = debounce(fetchNote, 900); // 300 ms debounce
 
     // UseEffect to trigger note fetching
     useEffect(() => {
@@ -62,6 +62,7 @@ const Access = () => {
 
         if (error) {
             setError('Error saving note: ' + error.message);
+            setNote([]);
         } else {
             // Optimistically show a success message
             alert('Note updated successfully!');
