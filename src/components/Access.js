@@ -25,6 +25,11 @@ const Access = () => {
         setLoading(true);
         setError(''); // Clear error message
 
+        // Trigger haptic feedback if supported
+        if (navigator.vibrate) {
+        navigator.vibrate(100); // Vibrate for 50ms
+        }
+
         const { data, error } = await supabase
             .from('email')
             .select('*')
@@ -97,6 +102,30 @@ const Access = () => {
                             <option key={index} value={userEmail} />
                         ))}
                     </datalist>
+                </div>
+                {/* Display Email Domains as Buttons */}
+                <div className="mb-2">
+                <div className="d-flex flex-wrap gap-2">
+                    {[
+                    "gmail.com",
+                    "yahoo.com",
+                    "outlook.com",
+                    "hotmail.com",
+                    ].map((domain, index) => (
+                    <button
+                        key={index}
+                        type="button"
+                        className="btn btn-sm  btn-secondary"
+                        style={{ backgroundColor: "#d3d3d3" }} // Light grey button
+                        onClick={() => {
+                        const usernamePart = email.split("@")[0]; // Extract the part before '@'
+                        setEmail(`${usernamePart}@${domain}`); // Update the email with selected domain
+                        }}
+                    >
+                        @{domain}
+                    </button>
+                    ))}
+                </div>
                 </div>
                 <div className="mb-3">
                     <input

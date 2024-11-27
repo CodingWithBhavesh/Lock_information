@@ -74,6 +74,11 @@ const NotesForm = () => {
     setError("");
     setSaveMessage(""); // Clear save message
 
+    // Trigger haptic feedback if supported
+    if (navigator.vibrate) {
+        navigator.vibrate(60); // Vibrate for 60ms
+        }
+
     if (!emailValid) {
       setError("Please provide a valid email address.");
       setLoading(false);
