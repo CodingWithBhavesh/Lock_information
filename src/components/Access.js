@@ -60,7 +60,7 @@ const Access = () => {
         setError(''); // Clear error message
 
         const { data, error } = await supabase
-            .from('notes')
+            .from('email')
             .update({ note }) // Update the note
             .eq('email', email) // Update by email
             .eq('password', password);
