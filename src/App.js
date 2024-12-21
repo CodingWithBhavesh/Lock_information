@@ -8,8 +8,10 @@ import Note from './components/Notes'; // Import the AccessNotes component
 
 import './App.css'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LiveChat from './components/LiveChat';
+// import LiveChat from './components/LiveChat';
 import Access from './components/Access';
+import PokemonQuiz from './components/pokimon';
+import { MdMargin } from 'react-icons/md';
 
 
 const App = () => {
@@ -42,7 +44,7 @@ const App = () => {
     };
 
     return (
-        <div className="container mt-4 ">
+        <div className="container mt-4 my-4 ">
             <h1 style={{fontSize:"5rem",color:"grey",fontFamily:"cursive"}}>Notes Locker</h1>
             {/* <NotesForm onNoteSaved={handleNoteSaved} /> */}
             <div className="mb-3">
@@ -57,15 +59,22 @@ const App = () => {
                     <button className="btn btn-primary mx-2" onClick={() => switchView('accessNotes')}>
                         Access Notes
                     </button>
-                )}            
+                )}  
+                {currentView !== 'PokemonQuiz' && (
+                    <button className="btn btn-primary mx-2" onClick={() => switchView('PokemonQuiz')}>
+                        PokemonQuiz
+                    </button>
+                )}          
             </div>
+
+            
 
 
             {/* Conditional rendering based on currentView state */}
             {currentView === 'accessNotes' && <Access notes={notes}  />}
             {currentView === 'notesForm' && <Note onNoteSaved={handleNoteSaved}   />}
+            {currentView === 'PokemonQuiz' && <PokemonQuiz />}
 
-            <LiveChat/>
             
 
             {/* Add AccessNotes component and pass notes as prop */}

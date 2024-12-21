@@ -85,7 +85,7 @@ const NotesForm = () => {
       return;
     }
 
-    if (password.length < 4) {
+    if (password.length < 4 , password.length >12 ) {
       setError("Password must be at least 4 characters long.");
       setLoading(false);
       return;
@@ -103,7 +103,7 @@ const NotesForm = () => {
       .insert([{ full_name: fullName, email, password, note }]); // Include email
 
     if (error) {
-      setError("Error saving note: " + error.message);
+      setError("Error on saving note: " + error.message);
     } else {
       setNote("");
       setFullName(""); // Clear full name

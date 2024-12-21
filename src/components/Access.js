@@ -74,6 +74,15 @@ const Access = () => {
         }
         setLoading(false);
     };
+    // const ForgotPassword = async () => {
+
+    //     setLoading(true);
+        
+    //     const { data ,error} = await supabase
+    //         .from("email")
+
+
+    // }
 
     const [emails, setEmails] = useState([]);
     // Load emails from localStorage on component mount
