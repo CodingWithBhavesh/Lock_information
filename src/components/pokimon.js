@@ -186,7 +186,7 @@ function PokemonQuiz() {
             {hintVisible && (
               <div className="alert alert-info mt-3">
                 Abilities: {pokemon.abilities.map(ability => ability.ability.name).join(", ")}
-                {fetchPokemonData()}
+                [{fetchPokemonData()}]
               </div>
             )}
 
