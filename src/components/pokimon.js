@@ -9,7 +9,12 @@ function PokemonQuiz() {
   const [loading, setLoading] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [difficulty, setDifficulty] = useState("easy");
-  const [hintVisible, setHintVisible] = useState(false);    
+  const [hintVisible, setHintVisible] = useState(false);   
+  const [hdImage, setHdImage] = useState(""); 
+  const [abilities, setAbilities] = useState([]);
+  const [stats, setStats] = useState([]);
+    
+
 
   useEffect(() => {
     fetchQuizData();
@@ -18,14 +23,15 @@ function PokemonQuiz() {
   const fetchQuizData = async () => {
     setLoading(true);
     const range = getRangeForDifficulty(difficulty);
-    const correctId = Math.floor(Math.random() * range) + 1;
+    const pokemonData  = Math.floor(Math.random() * range) + 1;
 
     try {
-      const correctResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon/${correctId}`);
+      const correctResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonData }`);
       const correctName = correctResponse.data.name;
       const otherOptions = await fetchRandomOptions(correctName, optionsCount());
 
       setPokemon(correctResponse.data);
+      setHdImage(correctResponse.data.sprites.other["official-artwork"].front_default);
       setOptions(shuffleOptions([correctName, ...otherOptions]));
       setFeedback("");
       setImageLoaded(false); // Reset image loaded state
@@ -42,21 +48,21 @@ function PokemonQuiz() {
       const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
       const { abilities, stats } = response.data;
   
-      // Extracting abilities
-      const abilityNames = abilities.map(ability => ability.ability.name);
-  
-      // Extracting stats
-      const statDetails = stats.map(stat => ({
+      // Extract abilities and stats
+      const abilityNames = abilities.map((ability) => ability.ability.name);
+      const statDetails = stats.map((stat) => ({
         name: stat.stat.name,
-        baseStat: stat.base_stat
+        baseStat: stat.base_stat,
       }));
   
-      console.log('Abilities:', abilityNames);
-      console.log('Stats:', statDetails);
+      // Update state
+      setAbilities(abilityNames);
+      setStats(statDetails);
     } catch (error) {
       console.error("Error fetching Pokémon data:", error);
     }
   };
+  
   
   
 
@@ -74,7 +80,7 @@ function PokemonQuiz() {
     }
   }
 
-  // Get number of options based on difficulty level
+  // Get number of options based on difficult y level
   function optionsCount() {
     switch (difficulty) {
       case "easy":
@@ -133,7 +139,7 @@ function PokemonQuiz() {
 
   // Handle hint button click
   const handleHint = () => {
-    setHintVisible(true);
+    setHintVisible(prev => !prev); // Toggles hint visibility
   };
 
   return (
@@ -164,15 +170,18 @@ function PokemonQuiz() {
             {/* Pokémon Image with Loading State */}
             <div className="card mx-auto" style={{ width: "18rem", border: "none", borderRadius: "15px", boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)" }}>
               <img
-                src={pokemon.sprites.front_default}
-                alt="pokemon"
+                // src={pokemon.sprites.front_default}
+                src ={hdImage}
+                // alt="pokemon"
+                alt={`Image of ${pokemon.name}`}
                 className={`card-img-top ${loading || !imageLoaded ? "d-none" : ""}`}
+                style={{ borderRadius: "15px" }}
                 onLoad={handleImageLoad}
               />
               {!imageLoaded && (
                 <img
                   src="https://via.placeholder.com/150"
-                  alt="placeholder"
+                  alt={`Image of ${pokemon.name}`}
                   className="card-img-top"
                 />
               )}
@@ -180,15 +189,60 @@ function PokemonQuiz() {
             </div>
 
             {/* Hint Button */}
-            <button className="btn btn-info mt-3" onClick={handleHint}>Get a Hint</button>
+            <button className="btn btn-info mt-3" 
+              onClick={() =>{
+                handleHint()
+                if (!hintVisible && pokemon) {
+                  fetchPokemonData(pokemon.id)
+                }
+              }}
+            >
+              {hintVisible ? "Hide Hint" : "Get a Hint"}
+            </button>
 
-            {/* Hint Display */}
-            {hintVisible && (
-              <div className="alert alert-info mt-3">
-                Abilities: {pokemon.abilities.map(ability => ability.ability.name).join(", ")}
-                {/* [{fetchPokemonData()}] */}
-              </div>
-            )}
+            
+            {/* Collapsible Hint Display */}
+            <div
+              className={`alert alert-info mt-3 mx-auto ${
+                hintVisible ? "show" : "collapse"
+              }`}
+              style={{
+                width: "fit-content",
+                transition: "max-height 0.3s ease-in-out",
+                textAlign: "left",
+                maxHeight: hintVisible ? "500px" : "0", // Adjust maxHeight based on visibility
+                overflow: "hidden", // Prevent overflow when hidden
+              }}
+            >
+              {hintVisible && (
+                <>
+                  <strong>Abilities:</strong>
+                  {abilities.map((ability, index) => (
+                    <span key={index} className="badge bg-secondary mx-1">
+                      {ability}
+                    </span>
+                  ))}
+                  <br />
+                  <strong>Stats:</strong>
+                  <div className="row mt-2">
+                    {stats.map((stat, index) => (
+                      <div key={index} className="col-6 mb-2">
+                        <span>{stat.name}:</span>
+                        <div className="progress" style={{ height: "10px" }}>
+                          <div
+                            className="progress-bar"
+                            style={{
+                              width: `${stat.baseStat}%`,
+                              backgroundColor: stat.baseStat > 70 ? "green" : "orange",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  </>
+                  )}
+                </div>
 
             {/* Options */}
             <div className="mt-4">
