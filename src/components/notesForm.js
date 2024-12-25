@@ -4,7 +4,7 @@ import generateUsername from './generateUserName'; // Import your username gener
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 
-const NotesForm = () => {
+const NotesForm = (props) => {
     const [fullName, setFullName] = useState(''); // State for full name
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -80,8 +80,45 @@ const NotesForm = () => {
         setLoading(false);
     };
 
+
+     const [mode ,setMode] = useState('light');//wheather which mode is activated
+  const toggleMode = (color)=>{
+    // removeBgcolor();
+    // document.body.classList.add('bg-'+color)
+    if( mode === "light") {
+      document.body.style.backgroundColor ='#2e2e2e'
+      setMode('dark')
+    //   showAlert("Dark mode enable sucessfully","success")
+      document.title =  'TextTransformation - Dark'
+      setInterval(() => {
+        document.title =  'TextTransformation is amazing app'
+      }, 2000);
+      setInterval(() => {
+        document.title =  'Install (bhavesh) My app'
+      }, 1500);
+;
+    }
+    else{
+      document.body.style.backgroundColor ='white';
+      setMode('light'); 
+    //   showAlert("Light mode enable sucessfully","success")
+      document.title =  'TextTransformation - Light'
+      setInterval(() => {
+        document.title =  'TextTransformation is amazing app'
+      }, 2000);
+      setInterval(() => {
+        document.title =  'Install My app'
+      }, 1500)
+    }
+
+  }
+
     return (
         <div className="container mt-4 mt-5 ">
+                  <div className=" forMobileDarkMode">
+          <div className="img" onClick={props.toggleMode}>  </div>
+          </div>
+
             <h2 className="text-center" style={{ fontVariantCaps: "unicase" }}>Lock Your Note</h2>
             
             <form onSubmit={saveNote} className="p-3 border rounded shadow my-4">

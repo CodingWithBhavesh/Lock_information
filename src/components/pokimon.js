@@ -173,7 +173,7 @@ function PokemonQuiz() {
                 // src={pokemon.sprites.front_default}
                 src ={hdImage}
                 // alt="pokemon"
-                alt={`Image of ${pokemon.name}`}
+                // alt={`Image of ${pokemon.name}`}
                 className={`card-img-top ${loading || !imageLoaded ? "d-none" : ""}`}
                 style={{ borderRadius: "15px" }}
                 onLoad={handleImageLoad}
@@ -181,7 +181,7 @@ function PokemonQuiz() {
               {!imageLoaded && (
                 <img
                   src="https://via.placeholder.com/150"
-                  alt={`Image of ${pokemon.name}`}
+                  // alt={`Image of ${pokemon.name}`}
                   className="card-img-top"
                 />
               )}

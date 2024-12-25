@@ -12,9 +12,37 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Access from './components/Access';
 import PokemonQuiz from './components/pokimon';
 import { MdMargin } from 'react-icons/md';
+import { messaging } from './firebase-config'; // Adjust the path as needed
+import { getToken, onMessage } from 'firebase/messaging';
 
 
 const App = () => {
+
+    useEffect(() => {
+        // Request permission to send notifications
+        const requestPermission = async () => {
+          try {
+            const token = await getToken(messaging, {
+              vapidKey: "AIzaSyBUr1mzLde8O7uSdpBzGZXP7PrcCNyq4Vo",
+            });
+            if (token) {
+              console.log("Notification Token:", token);
+              // Save the token to your database
+            }
+          } catch (error) {
+            console.error("Permission denied or error:", error);
+          }
+        };
+    
+        requestPermission();
+    
+        // Handle incoming messages
+        onMessage(messaging, (payload) => {
+          console.log("Message received:", payload);
+          // Show notification or update UI here
+        });
+      }, []);   
+
     const [notes, setNotes] = useState([]);
 
     // Function to fetch notes from Supabase
